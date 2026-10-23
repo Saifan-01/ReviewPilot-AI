@@ -58,11 +58,11 @@ ReviewPilot AI is orchestrated using the **Strands Agents SDK**.
 [Confidence >= 0.80]           [Confidence < 0.80]
        │                               │
        │                               ▼
-       │                    🛑 Escalate to Human Lead
+       │                     Escalate to Human Lead
        │                       (Block Automated Merge)
        ├─────────────────────────────────┐
        ▼                                 ▼
-⚡ Auto-Approve                     🛡️ Security / Breaking / Standard
+ Auto-Approve                      Security / Breaking / Standard
 (Bypass Bedrock LLM entirely;       │
  Fast-track merge in 125ms)          ▼
                         ┌────────────────────────────────────────┐
