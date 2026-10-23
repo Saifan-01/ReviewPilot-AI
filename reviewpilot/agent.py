@@ -113,7 +113,7 @@ class ReviewPilotAgent:
         if verdict.action == RoutingAction.AUTO_APPROVE:
             # Optimization: Fast-track approval. Bypass heavy LLM call!
             summary = (
-                f"### ⚡ Fast-Track Approval: Non-Functional Change\n\n"
+                f"### Fast-Track Approval: Non-Functional Change\n\n"
                 f"- **Decision:** Auto-Approved by **Strands Decider 2B**\n"
                 f"- **Calibrated Confidence:** {verdict.confidence * 100:.1f}%\n"
                 f"- **Decision Latency:** {verdict.decision_latency_ms:.1f} ms\n"
@@ -126,7 +126,7 @@ class ReviewPilotAgent:
         elif verdict.action == RoutingAction.HUMAN_REVIEW:
             # Uncertainty-aware safety: Escalate low-confidence cases to engineering leads
             summary = (
-                f"### 🛑 Human Lead Escalation: Low Confidence Triage\n\n"
+                f"### Human Lead Escalation: Low Confidence Triage\n\n"
                 f"Strands Decider 2B evaluated this PR as `{verdict.category}`, but its "
                 f"calibrated confidence (**{verdict.confidence * 100:.1f}%**) fell below "
                 f"the required safety threshold of **{verdict.threshold * 100:.1f}%**.\n\n"

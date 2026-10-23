@@ -34,7 +34,7 @@ def run_benchmark():
     pr_list: List[PRPayload] = [PRPayload(**val) for val in samples.values()]
 
     print("=" * 80)
-    print(" 📊 ReviewPilot AI Benchmark: Strands Decider 2B vs Bedrock LLM")
+    print(" ReviewPilot AI Benchmark: Strands Decider 2B vs Bedrock LLM")
     print("=" * 80)
     print(f"Evaluating {len(pr_list)} diverse pull request workloads...")
     print("-" * 80)
@@ -76,7 +76,7 @@ def run_benchmark():
     cost_savings = ((total_legacy_cost - total_hybrid_cost) / total_legacy_cost) * 100
 
     print("=" * 80)
-    print(" 📈 BENCHMARK SUMMARY & AGGREGATE RESULTS")
+    print(" BENCHMARK SUMMARY & AGGREGATE RESULTS")
     print("=" * 80)
     print(f"  • Average Triage Latency (Decider 2B) : {avg_decider_lat:.1f} ms")
     print(f"  • Average Triage Latency (Bedrock LLM): {avg_legacy_lat:.1f} ms")

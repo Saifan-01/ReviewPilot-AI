@@ -222,7 +222,7 @@ Provide your review in the following JSON structure:
                 )
             )
             summary = (
-                f"### 🛡️ DevSecOps Security Audit (Bedrock Claude 3)\n\n"
+                f"### DevSecOps Security Audit (Bedrock Claude 3)\n\n"
                 f"**Verdict:** {verdict.action.value.upper()}\n\n"
                 f"Strands Decider 2B flagged this pull request as **`security_escalation`** with "
                 f"**{verdict.confidence * 100:.1f}% confidence**.\n\n"
@@ -241,7 +241,7 @@ Provide your review in the following JSON structure:
                 )
             )
             summary = (
-                f"### ⚠️ Breaking Change Impact Report (Bedrock Claude 3)\n\n"
+                f"### Breaking Change Impact Report (Bedrock Claude 3)\n\n"
                 f"**Verdict:** {verdict.action.value.upper()}\n\n"
                 f"Strands Decider 2B detected API / schema contract alterations (**{verdict.confidence * 100:.1f}% confidence**).\n\n"
                 f"- **Impact Assessment:** Downstream clients consuming `{primary_file}` will fail if deployed.\n"
@@ -249,7 +249,7 @@ Provide your review in the following JSON structure:
             )
         elif verdict.category == "auto_approve":
             summary = (
-                f"### ✅ Fast-Track Approval Report\n\n"
+                f"### Fast-Track Approval Report\n\n"
                 f"**Verdict:** {verdict.action.value.upper()}\n\n"
                 f"Strands Decider 2B classified this PR as **`auto_approve`** with "
                 f"**{verdict.confidence * 100:.1f}% confidence** (evaluated in {verdict.decision_latency_ms:.1f}ms).\n\n"
@@ -267,7 +267,7 @@ Provide your review in the following JSON structure:
                 )
             )
             summary = (
-                f"### 🔍 Standard Code Review (Bedrock Claude 3)\n\n"
+                f"### Standard Code Review (Bedrock Claude 3)\n\n"
                 f"**Verdict:** {verdict.action.value.upper()}\n\n"
                 f"Changes look solid and follow idiomatic conventions. Ensure test coverage reaches 85%."
             )

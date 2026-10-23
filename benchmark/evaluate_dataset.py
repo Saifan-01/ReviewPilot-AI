@@ -35,7 +35,7 @@ def run_statistical_evaluation():
         dataset = json.load(f)
 
     print("=" * 80)
-    print(" 🔬 ReviewPilot AI: Empirical Calibration & Accuracy Evaluation")
+    print(" ReviewPilot AI: Empirical Calibration & Accuracy Evaluation")
     print("    Dataset: 20 Real-World Pull Requests (Docs, Security, Breaking, Apps)")
     print("=" * 80)
 
@@ -123,7 +123,7 @@ def run_statistical_evaluation():
             ece += bin_weight * abs(bin_acc - bin_avg_conf)
 
     print("=" * 80)
-    print(" 📊 EMPIRICAL PERFORMANCE & CALIBRATION METRICS")
+    print(" EMPIRICAL PERFORMANCE & CALIBRATION METRICS")
     print("=" * 80)
     print(f"  • Overall Routing Accuracy    : {accuracy:.1f}% ({correct_predictions}/{total} pull requests)")
     print(f"  • Expected Calibration Error  : {ece * 100:.2f}% (ECE < 5% signifies calibrated reliability)")

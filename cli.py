@@ -75,7 +75,7 @@ def main():
         pr = load_pr_from_file(args.file)
 
     print("=" * 70)
-    print(" 🚀 ReviewPilot AI: Code Review Gatekeeper")
+    print(" ReviewPilot AI: Code Review Gatekeeper")
     print("    Strands Decider 2B (#policy) + Amazon Bedrock (System Two)")
     print("=" * 70)
     print(f"Evaluating Pull Request: #{pr.id} - {pr.title}")
@@ -100,7 +100,7 @@ def main():
     print(f"  • Enforced Action    : {verdict.action.value.upper()}")
 
     if verdict.escalated_to_human:
-        print(f"\n[🚨 HUMAN ESCALATION REQUIRED]")
+        print(f"\n[HUMAN ESCALATION REQUIRED]")
         print(f"  Reason: {verdict.rationale}")
         print(f"  Automated merge and tool calls blocked.")
         sys.exit(1)
@@ -113,7 +113,7 @@ def main():
     if result.findings:
         print(f"\n[Findings ({len(result.findings)})]")
         for f in result.findings:
-            icon = "🔴" if f.severity == "critical" else ("🟡" if f.severity == "warning" else "🔵")
+            icon = "[CRITICAL]" if f.severity == "critical" else ("[WARNING]" if f.severity == "warning" else "[INFO]")
             print(f"  {icon} [{f.severity.upper()}] {f.file}:{f.line or '?'}")
             print(f"     Message   : {f.message}")
             if f.suggestion:

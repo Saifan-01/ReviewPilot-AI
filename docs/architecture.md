@@ -28,11 +28,11 @@ flowchart TD
     end
 
     subgraph DecisionOutcomes["Enforced Routing Outcomes"]
-        D -- "Low Confidence (< 0.80)" --> E["🛑 Escalate to Human Lead<br/>(Halt Autonomous Tools)"]
-        D -- "High Conf. Auto-Approve" --> F["⚡ Fast-Track Approval<br/>(Bypass Bedrock LLM)"]
-        D -- "High Conf. Security Escalation" --> G["🛡️ Security Audit Workflow"]
-        D -- "High Conf. Breaking Change" --> H["⚠️ Breaking Change Review"]
-        D -- "High Conf. Standard Review" --> I["🔍 Standard Code Review"]
+        D -- "Low Confidence (< 0.80)" --> E["Escalate to Human Lead<br/>(Halt Autonomous Tools)"]
+        D -- "High Conf. Auto-Approve" --> F["Fast-Track Approval<br/>(Bypass Bedrock LLM)"]
+        D -- "High Conf. Security Escalation" --> G["Security Audit Workflow"]
+        D -- "High Conf. Breaking Change" --> H["Breaking Change Review"]
+        D -- "High Conf. Standard Review" --> I["Standard Code Review"]
     end
 
     subgraph S2["Tier 2: System Two Generative (Cloud)"]
