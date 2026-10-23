@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: reviewpilot-ai
+    runtime: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: streamlit run app.py --server.port $PORT --server.address 0.0.0.0 --server.headless true
+    plan: free
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.9
+      - key: STREAMLIT_SERVER_PORT
+        fromService:
+          name: reviewpilot-ai
+          type: web
+          property: port
