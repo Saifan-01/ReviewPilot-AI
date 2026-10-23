@@ -10,6 +10,7 @@ Usage:
 from __future__ import annotations
 
 import json
+import re
 from pathlib import Path
 import time
 import streamlit as st
@@ -17,6 +18,18 @@ import streamlit as st
 from reviewpilot.agent import ReviewPilotAgent
 from reviewpilot.decider_client import DeciderClient
 from reviewpilot.models import PRPayload, RoutingAction, TriageCategory
+
+def remove_emojis(text: str) -> str:
+    """Strip all emojis, symbols, and pictographs for clean enterprise UI."""
+    if not text:
+        return ""
+    pattern = re.compile(
+        r"[\U00010000-\U0010ffff\u2600-\u26FF\u2700-\u27BF\u2300-\u23FF\u2B50\u20E3\uFE0F\u26A1\u26A0\u2705\u274C\u2714\u2716\u26D4\u200D]"
+    )
+    cleaned = pattern.sub("", text)
+    cleaned = re.sub(r"(#{1,6})\s+", r"\1 ", cleaned)
+    return cleaned
+
 
 # Set page config with collapsed sidebar
 st.set_page_config(
@@ -155,6 +168,51 @@ st.markdown(
         .status-escalate { background: #4c1d9533; color: #c4b5fd; }
         .status-standard { background: #1e3a8a33; color: #93c5fd; }
     }
+
+    /* Bedrock Metadata Box - High Contrast in Dark & Light */
+    .bedrock-meta-box {
+        font-size: 12px;
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+        padding: 10px 14px;
+        background: #1e293b;
+        color: #f8fafc;
+        border: 1px solid #334155;
+        border-radius: 8px;
+        margin-top: 10px;
+        line-height: 1.5;
+    }
+    .bedrock-meta-box .meta-label {
+        color: #94a3b8;
+    }
+    .bedrock-meta-box .meta-val {
+        color: #38bdf8;
+        font-weight: 600;
+    }
+    .bedrock-meta-box .meta-val-cost {
+        color: #10b981;
+        font-weight: 600;
+    }
+    .bedrock-meta-box .meta-sep {
+        color: #64748b;
+        margin: 0 6px;
+    }
+    @media (prefers-color-scheme: light) {
+        .bedrock-meta-box {
+            background: #f1f5f9;
+            color: #0f172a;
+            border-color: #cbd5e1;
+        }
+        .bedrock-meta-box .meta-label {
+            color: #475569;
+        }
+        .bedrock-meta-box .meta-val {
+            color: #0284c7;
+        }
+        .bedrock-meta-box .meta-val-cost {
+            color: #059669;
+        }
+    }
+
     </style>
     """,
     unsafe_allow_html=True,
@@ -461,25 +519,27 @@ with tab_review:
                 for idx, finding in enumerate(result.findings):
                     severity_label = f"[{finding.severity.upper()}]"
                     with st.expander(f"{severity_label} {finding.file}:{finding.line or 'N/A'} - {finding.message[:60]}..."):
-                        st.markdown(f"**Full Finding:** {finding.message}")
+                        st.markdown(f"**Full Finding:** {remove_emojis(finding.message)}")
                         if finding.suggestion:
-                            st.markdown(f"**Remediation Suggestion:** `{finding.suggestion}`")
+                            st.markdown(f"**Remediation Suggestion:** `{remove_emojis(finding.suggestion)}`")
             else:
                 st.info("No line-level warnings generated (workload was fast-tracked or escalated).")
 
             st.markdown(
                 f"""
-                <div style="font-size: 12px; font-family: monospace; padding: 10px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; margin-top: 10px;">
-                    Bedrock Model: <strong>{result.generative_model_used}</strong> | 
-                    Gen Latency: <strong>{result.generative_latency_ms:.1f} ms</strong> | 
-                    Estimated Cost: <strong>${result.estimated_cost_usd:.4f}</strong>
+                <div class="bedrock-meta-box">
+                    <span class="meta-label">Bedrock Model:</span> <span class="meta-val">{result.generative_model_used}</span>
+                    <span class="meta-sep">|</span>
+                    <span class="meta-label">Gen Latency:</span> <span class="meta-val">{result.generative_latency_ms:.1f} ms</span>
+                    <span class="meta-sep">|</span>
+                    <span class="meta-label">Estimated Cost:</span> <span class="meta-val-cost">${result.estimated_cost_usd:.4f}</span>
                 </div>
                 """,
                 unsafe_allow_html=True,
             )
 
         st.markdown("**Executive Summary Report**")
-        st.markdown(result.summary_markdown)
+        st.markdown(remove_emojis(result.summary_markdown))
 
 
 # ---------------------------------------------------------
