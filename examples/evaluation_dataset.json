@@ -1,0 +1,182 @@
+[
+  {
+    "id": "PR-01",
+    "title": "docs: fix typo in installation guide",
+    "author": "dev-1",
+    "files_changed": ["README.md"],
+    "additions": 2, "deletions": 1,
+    "diff_content": "- pip instal strands\n+ pip install strands",
+    "true_category": "auto_approve"
+  },
+  {
+    "id": "PR-02",
+    "title": "docs: update API documentation links",
+    "author": "dev-2",
+    "files_changed": ["docs/api.md"],
+    "additions": 5, "deletions": 3,
+    "diff_content": "- https://old-api.internal\n+ https://api.production.aws",
+    "true_category": "auto_approve"
+  },
+  {
+    "id": "PR-03",
+    "title": "chore: fix typo in contributing markdown guidelines",
+    "author": "dev-3",
+    "files_changed": ["CONTRIBUTING.md"],
+    "additions": 1, "deletions": 1,
+    "diff_content": "- Pls make sure tests pass\n+ Please ensure all tests pass",
+    "true_category": "auto_approve"
+  },
+  {
+    "id": "PR-04",
+    "title": "docs: format markdown table in architecture spec",
+    "author": "dev-4",
+    "files_changed": ["docs/architecture.md"],
+    "additions": 4, "deletions": 4,
+    "diff_content": "|Col1|Col2|\n|---|---|\n|val1|val2|",
+    "true_category": "auto_approve"
+  },
+  {
+    "id": "PR-05",
+    "title": "feat(auth): rotate JWT session token with RS256 private key",
+    "author": "sec-1",
+    "files_changed": ["src/auth/jwt.py", "config/keys.py"],
+    "additions": 85, "deletions": 12,
+    "diff_content": "+ token = jwt.encode(payload, private_key, algorithm='RS256')\n+ def verify_token(bearer_token): ...",
+    "true_category": "security_escalation"
+  },
+  {
+    "id": "PR-06",
+    "title": "fix(auth): secure password hashing using bcrypt salt",
+    "author": "sec-2",
+    "files_changed": ["src/auth/passwords.py"],
+    "additions": 34, "deletions": 8,
+    "diff_content": "- return hashlib.md5(pwd.encode()).hexdigest()\n+ return bcrypt.hashpw(pwd.encode(), bcrypt.gensalt())",
+    "true_category": "security_escalation"
+  },
+  {
+    "id": "PR-07",
+    "title": "fix(db): parameterize raw SQL query to prevent SQL injection",
+    "author": "sec-3",
+    "files_changed": ["src/db/users.py"],
+    "additions": 14, "deletions": 12,
+    "diff_content": "- db.execute(f'SELECT * FROM users WHERE token = {token}')\n+ db.execute('SELECT * FROM users WHERE token = :token', {'token': token})",
+    "true_category": "security_escalation"
+  },
+  {
+    "id": "PR-08",
+    "title": "feat(oauth): add GitHub OAuth provider authentication flow",
+    "author": "sec-4",
+    "files_changed": ["src/auth/oauth.py", "src/auth/config.py"],
+    "additions": 110, "deletions": 15,
+    "diff_content": "+ def exchange_oauth_code(client_id, client_secret, code):\n+     headers = {'Authorization': f'Bearer {token}'}",
+    "true_category": "security_escalation"
+  },
+  {
+    "id": "PR-09",
+    "title": "refactor(schema): drop deprecated user_profile columns in schema.sql",
+    "author": "db-1",
+    "files_changed": ["migrations/003_drop_v1.py", "schema.sql"],
+    "additions": 12, "deletions": 45,
+    "diff_content": "+ op.drop_column('users', 'legacy_tax_id')\n+ op.execute('ALTER TABLE users DROP CONSTRAINT fk_legacy')",
+    "true_category": "breaking_change"
+  },
+  {
+    "id": "PR-10",
+    "title": "refactor(api): remove deprecated v1 search endpoint",
+    "author": "api-1",
+    "files_changed": ["src/api/routes.py"],
+    "additions": 4, "deletions": 60,
+    "diff_content": "- @router.get('/v1/search')\n- def search_v1(): ...\n+ # Deprecated endpoint removed",
+    "true_category": "breaking_change"
+  },
+  {
+    "id": "PR-11",
+    "title": "refactor(db): alter table invoices change customer_id uuid to string",
+    "author": "db-2",
+    "files_changed": ["db/migrations/045_type_change.sql"],
+    "additions": 8, "deletions": 2,
+    "diff_content": "+ ALTER TABLE invoices ALTER COLUMN customer_id TYPE VARCHAR(64);",
+    "true_category": "breaking_change"
+  },
+  {
+    "id": "PR-12",
+    "title": "feat(api): rename public user response field status to state",
+    "author": "api-2",
+    "files_changed": ["src/api/serializers.py"],
+    "additions": 6, "deletions": 6,
+    "diff_content": "- 'status': obj.status\n+ 'state': obj.status",
+    "true_category": "breaking_change"
+  },
+  {
+    "id": "PR-13",
+    "title": "fix: correct off-by-one error in array slicing",
+    "author": "app-1",
+    "files_changed": ["src/utils/math.py", "tests/test_math.py"],
+    "additions": 12, "deletions": 4,
+    "diff_content": "- return items[:idx]\n+ return items[:idx + 1]",
+    "true_category": "standard_review"
+  },
+  {
+    "id": "PR-14",
+    "title": "feat: add retry mechanism with exponential backoff for HTTP requests",
+    "author": "app-2",
+    "files_changed": ["src/client/http.py"],
+    "additions": 40, "deletions": 10,
+    "diff_content": "+ for attempt in range(max_retries):\n+     time.sleep(2 ** attempt)",
+    "true_category": "standard_review"
+  },
+  {
+    "id": "PR-15",
+    "title": "fix: handle null response from third party currency API",
+    "author": "app-3",
+    "files_changed": ["src/services/currency.py"],
+    "additions": 15, "deletions": 5,
+    "diff_content": "+ if rates is None:\n+     return default_rates",
+    "true_category": "standard_review"
+  },
+  {
+    "id": "PR-16",
+    "title": "feat: add caching layer for user profile lookups using Redis",
+    "author": "app-4",
+    "files_changed": ["src/cache/redis.py", "src/services/user.py"],
+    "additions": 55, "deletions": 8,
+    "diff_content": "+ cached = redis_client.get(user_id)\n+ if cached: return json.loads(cached)",
+    "true_category": "standard_review"
+  },
+  {
+    "id": "PR-17",
+    "title": "refactor: massive reorganization and untested WIP cleanup across core modules",
+    "author": "intern-1",
+    "files_changed": ["src/core.py", "src/utils.py", "src/legacy.py", "src/handlers.py"],
+    "additions": 1400, "deletions": 1100,
+    "diff_content": "churn across 15 files with untested logic",
+    "true_category": "ambiguous_escalation"
+  },
+  {
+    "id": "PR-18",
+    "title": "refactor: untested experimental rewrite of background worker threads",
+    "author": "intern-2",
+    "files_changed": ["src/worker.py", "src/threadpool.py"],
+    "additions": 800, "deletions": 650,
+    "diff_content": "+ # experimental untested worker changes",
+    "true_category": "ambiguous_escalation"
+  },
+  {
+    "id": "PR-19",
+    "title": "fix: resolve CSS flexbox alignment in mobile navigation drawer",
+    "author": "ui-1",
+    "files_changed": ["frontend/src/nav.css"],
+    "additions": 8, "deletions": 4,
+    "diff_content": "- display: block;\n+ display: flex;\n+ align-items: center;",
+    "true_category": "standard_review"
+  },
+  {
+    "id": "PR-20",
+    "title": "docs: add badges and license link to project README",
+    "author": "dev-5",
+    "files_changed": ["README.md"],
+    "additions": 6, "deletions": 0,
+    "diff_content": "+ [![License](https://img.shields.io/badge/license-MIT-green.svg)]",
+    "true_category": "auto_approve"
+  }
+]

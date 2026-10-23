@@ -1,0 +1,60 @@
+{
+  "doc_typo_fix": {
+    "id": "PR-201",
+    "title": "docs: fix typo in README and update setup guide",
+    "description": "Corrects misspelled variable names in documentation and links to AWS Bedrock getting started guide.",
+    "author": "docs-contributor",
+    "target_branch": "main",
+    "files_changed": ["README.md", "docs/setup.md"],
+    "additions": 4,
+    "deletions": 2,
+    "diff_content": "--- a/README.md\n+++ b/README.md\n@@ -15,2 +15,2 @@\n-To configure you're agent, export AWS_REGION.\n+To configure your agent, export AWS_REGION.\n-See docs/setup for more detials.\n+See docs/setup for more details.\n--- a/docs/setup.md\n+++ b/docs/setup.md\n@@ -40,2 +40,2 @@\n-export STRANDS_DECIDER_URL=http://localhost:8000\n+export STRANDS_DECIDER_URL=http://127.0.0.1:8000"
+  },
+  "auth_oauth_security": {
+    "id": "PR-202",
+    "title": "feat(auth): integrate OAuth2 token refresh and JWT session handling",
+    "description": "Implements bearer token validation, refresh token rotation, and private key signing for user sessions.",
+    "author": "security-dev",
+    "target_branch": "main",
+    "files_changed": ["src/auth/service.py", "src/auth/jwt_handler.py", "src/config/keys.py"],
+    "additions": 142,
+    "deletions": 18,
+    "diff_content": "--- a/src/auth/jwt_handler.py\n+++ b/src/auth/jwt_handler.py\n@@ -25,12 +25,24 @@\n def verify_session_token(token: str, private_key: str) -> dict:\n+    # Validate OAuth Bearer and HMAC signature\n+    if not token.startswith('Bearer '):\n+        raise AuthenticationError('Malformed authorization header')\n+    raw_token = token.split(' ')[1]\n+    payload = jwt.decode(raw_token, private_key, algorithms=['RS256'])\n+    session_id = payload.get('sub')\n+    user_role = payload.get('role', 'standard')\n+    return {'user_id': session_id, 'role': user_role}\n--- a/src/auth/service.py\n+++ b/src/auth/service.py\n@@ -80,6 +80,18 @@\n+def refresh_access_token(refresh_token: str, secret_key: str):\n+    query = f\"SELECT * FROM user_sessions WHERE refresh_token = '{refresh_token}'\"\n+    session = db.session.execute(query).fetchone()\n+    return generate_new_jwt(session.user_id)"
+  },
+  "db_migration_breaking": {
+    "id": "PR-203",
+    "title": "refactor(db): drop deprecated billing_v1 columns and update schema.sql",
+    "description": "Removes legacy customer account fields from database schema and drops billing table columns.",
+    "author": "db-admin",
+    "target_branch": "main",
+    "files_changed": ["migrations/versions/0042_drop_billing_v1.py", "db/schema.sql"],
+    "additions": 18,
+    "deletions": 54,
+    "diff_content": "--- a/migrations/versions/0042_drop_billing_v1.py\n+++ b/migrations/versions/0042_drop_billing_v1.py\n@@ -10,8 +10,12 @@\n def upgrade():\n+    # Breaking schema change\n+    op.drop_column('accounts', 'legacy_credit_card_hash')\n+    op.drop_column('accounts', 'billing_address_v1')\n+    op.execute('ALTER TABLE customer_invoices DROP CONSTRAINT fk_legacy_invoice')\n--- a/db/schema.sql\n+++ b/db/schema.sql\n@@ -34,4 +34,1 @@\n-    legacy_credit_card_hash VARCHAR(255),\n-    billing_address_v1 TEXT"
+  },
+  "ambiguous_low_confidence": {
+    "id": "PR-204",
+    "title": "refactor: massive reorganization and untested WIP cleanup across core modules",
+    "description": "Experimental restructure of routing logic, utility functions, and background handlers. Work in progress.",
+    "author": "intern-dev",
+    "target_branch": "main",
+    "files_changed": [
+      "src/core/router.py", "src/utils/helpers.py", "src/services/billing.py", "src/services/notifier.py",
+      "src/services/indexer.py", "src/services/cache.py", "src/services/queue.py", "src/handlers/event.py"
+    ],
+    "additions": 1420,
+    "deletions": 1180,
+    "diff_content": "--- a/src/core/router.py\n+++ b/src/core/router.py\n@@ -1,50 +1,80 @@\n-# Temporary untested refactor\n-def dispatch(event):\n-    pass\n+def dispatch(event):\n+    # Churn across multiple modules without unit tests\n+    if hasattr(event, 'legacy'): return None\n+    return process_dynamically(event)"
+  },
+  "standard_bugfix": {
+    "id": "PR-205",
+    "title": "fix: resolve off-by-one error in invoice pagination calculation",
+    "description": "Adjusts page offset calculation in customer invoice list endpoint when limit parameter equals total records.",
+    "author": "backend-engineer",
+    "target_branch": "main",
+    "files_changed": ["src/controllers/invoices.py", "tests/test_invoices.py"],
+    "additions": 14,
+    "deletions": 5,
+    "diff_content": "--- a/src/controllers/invoices.py\n+++ b/src/controllers/invoices.py\n@@ -42,5 +42,8 @@\n def calculate_pagination_offset(page: int, limit: int) -> int:\n-    offset = (page - 1) * limit\n+    if page < 1:\n+        page = 1\n+    offset = (page - 1) * limit\n     return max(0, offset)\n--- a/tests/test_invoices.py\n+++ b/tests/test_invoices.py\n@@ -18,3 +18,7 @@\n+def test_pagination_offset_boundary():\n+    assert calculate_pagination_offset(0, 10) == 0\n+    assert calculate_pagination_offset(1, 10) == 0\n+    assert calculate_pagination_offset(2, 10) == 10"
+  }
+}

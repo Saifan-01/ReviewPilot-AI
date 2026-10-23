@@ -1,0 +1,15 @@
+{
+  "id": "PR-202",
+  "title": "feat(auth): integrate OAuth2 token refresh and JWT session handling",
+  "description": "Implements bearer token validation, refresh token rotation, and private key signing for user sessions.",
+  "author": "security-dev",
+  "target_branch": "main",
+  "files_changed": [
+    "src/auth/service.py",
+    "src/auth/jwt_handler.py",
+    "src/config/keys.py"
+  ],
+  "additions": 142,
+  "deletions": 18,
+  "diff_content": "--- a/src/auth/jwt_handler.py\n+++ b/src/auth/jwt_handler.py\n@@ -25,12 +25,24 @@\n def verify_session_token(token: str, private_key: str) -> dict:\n+    # Validate OAuth Bearer and HMAC signature\n+    if not token.startswith('Bearer '):\n+        raise AuthenticationError('Malformed authorization header')\n+    raw_token = token.split(' ')[1]\n+    payload = jwt.decode(raw_token, private_key, algorithms=['RS256'])\n+    session_id = payload.get('sub')\n+    user_role = payload.get('role', 'standard')\n+    return {'user_id': session_id, 'role': user_role}\n--- a/src/auth/service.py\n+++ b/src/auth/service.py\n@@ -80,6 +80,18 @@\n+def refresh_access_token(refresh_token: str, secret_key: str):\n+    query = f\"SELECT * FROM user_sessions WHERE refresh_token = '{refresh_token}'\"\n+    session = db.session.execute(query).fetchone()\n+    return generate_new_jwt(session.user_id)"
+}

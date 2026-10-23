@@ -1,0 +1,14 @@
+{
+  "id": "PR-203",
+  "title": "refactor(db): drop deprecated billing_v1 columns and update schema.sql",
+  "description": "Removes legacy customer account fields from database schema and drops billing table columns.",
+  "author": "db-admin",
+  "target_branch": "main",
+  "files_changed": [
+    "migrations/versions/0042_drop_billing_v1.py",
+    "db/schema.sql"
+  ],
+  "additions": 18,
+  "deletions": 54,
+  "diff_content": "--- a/migrations/versions/0042_drop_billing_v1.py\n+++ b/migrations/versions/0042_drop_billing_v1.py\n@@ -10,8 +10,12 @@\n def upgrade():\n+    # Breaking schema change\n+    op.drop_column('accounts', 'legacy_credit_card_hash')\n+    op.drop_column('accounts', 'billing_address_v1')\n+    op.execute('ALTER TABLE customer_invoices DROP CONSTRAINT fk_legacy_invoice')\n--- a/db/schema.sql\n+++ b/db/schema.sql\n@@ -34,4 +34,1 @@\n-    legacy_credit_card_hash VARCHAR(255),\n-    billing_address_v1 TEXT"
+}

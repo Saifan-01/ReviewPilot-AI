@@ -1,0 +1,28 @@
+{
+  "id": "PR-204",
+  "title": "refactor: massive reorganization and untested WIP cleanup across core modules",
+  "description": "Experimental restructure of routing logic, utility functions, and background handlers. Work in progress.",
+  "author": "intern-dev",
+  "target_branch": "main",
+  "files_changed": [
+    "src/core/router.py",
+    "src/utils/helpers.py",
+    "src/services/billing.py",
+    "src/services/notifier.py",
+    "src/services/indexer.py",
+    "src/services/cache.py",
+    "src/services/queue.py",
+    "src/handlers/event.py",
+    "src/handlers/message.py",
+    "src/config/flags.py",
+    "src/config/routes.py",
+    "src/api/v1/endpoints.py",
+    "src/api/v2/endpoints.py",
+    "src/storage/adapter.py",
+    "src/storage/s3.py",
+    "src/metrics/telemetry.py"
+  ],
+  "additions": 1420,
+  "deletions": 1180,
+  "diff_content": "--- a/src/core/router.py\n+++ b/src/core/router.py\n@@ -1,50 +1,80 @@\n-# Temporary untested refactor\n-def dispatch(event):\n-    pass\n+def dispatch(event):\n+    # Churn across multiple modules without unit tests\n+    if hasattr(event, 'legacy'): return None\n+    return process_dynamically(event)"
+}

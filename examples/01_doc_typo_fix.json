@@ -1,0 +1,14 @@
+{
+  "id": "PR-201",
+  "title": "docs: fix typo in README and update setup guide",
+  "description": "Corrects misspelled variable names in documentation and links to AWS Bedrock getting started guide.",
+  "author": "docs-contributor",
+  "target_branch": "main",
+  "files_changed": [
+    "README.md",
+    "docs/setup.md"
+  ],
+  "additions": 4,
+  "deletions": 2,
+  "diff_content": "--- a/README.md\n+++ b/README.md\n@@ -15,2 +15,2 @@\n-To configure you're agent, export AWS_REGION.\n+To configure your agent, export AWS_REGION.\n-See docs/setup for more detials.\n+See docs/setup for more details.\n--- a/docs/setup.md\n+++ b/docs/setup.md\n@@ -40,2 +40,2 @@\n-export STRANDS_DECIDER_URL=http://localhost:8000\n+export STRANDS_DECIDER_URL=http://127.0.0.1:8000"
+}
