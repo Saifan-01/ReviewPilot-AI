@@ -35,8 +35,8 @@ env/
 .coverage
 htmlcov/
 
-# Streamlit
-.streamlit/
+# Streamlit (ignore secrets, keep config.toml)
+.streamlit/secrets.toml
 
 # IDE & Scratch
 .freebuff/
