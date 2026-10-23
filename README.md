@@ -1,4 +1,4 @@
-# 🛡️ ReviewPilot AI
+# ReviewPilot AI
 ### Uncertainty-Aware Code Review & Security Gatekeeper Agent
 **Powered by AWS Strands Decider 2B & Amazon Bedrock**
 
@@ -12,10 +12,10 @@
 
 ---
 
-## 📌 Submission Overview
+## Submission Overview
 
 ReviewPilot AI is an original AI agent developed for the **AWS Strands Decider 2B Challenge**. It introduces a two-tier cognitive architecture:
-- **System One (Fast & Instinctive):** **AWS Strands Decider 2B** acts as a local ~115ms decision gatekeeper (\$0 marginal token cost) evaluating pull requests against strict organizational policies with mathematically calibrated confidence numbers.
+- **System One (Fast & Instinctive):** **AWS Strands Decider 2B** acts as a local ~115ms decision gatekeeper ($0 marginal token cost) evaluating pull requests against strict organizational policies with mathematically calibrated confidence numbers.
 - **System Two (Deliberative & Generative):** **Amazon Bedrock** (Anthropic Claude 3 Haiku / 3.5 Sonnet) is invoked selectively for deep code analysis, AST syntax verification, and DevSecOps remediation only when changes require generative reasoning.
 
 ### Submission Deliverables Checklist
@@ -29,7 +29,7 @@ ReviewPilot AI is an original AI agent developed for the **AWS Strands Decider 2
 
 ---
 
-## 🚀 Key Innovations & Architecture
+## Key Innovations & Architecture
 
 ```
 [Developer Submits Pull Request]
@@ -47,11 +47,11 @@ ReviewPilot AI is an original AI agent developed for the **AWS Strands Decider 2
 [Confidence >= 0.80]           [Confidence < 0.80]
        │                               │
        │                               ▼
-       │                    🛑 Escalate to Human Lead
+       │                    [!] Escalate to Human Lead
        │                       (Block Automated Merge)
        ├─────────────────────────────────┐
        ▼                                 ▼
-⚡ Auto-Approve                     🛡️ Security / Breaking / Standard
+Auto-Approve                        Security / Breaking / Standard
 (Bypass Bedrock LLM entirely;       │
  Fast-track merge in 125ms)          ▼
                         ┌────────────────────────────────────────┐
@@ -62,26 +62,26 @@ ReviewPilot AI is an original AI agent developed for the **AWS Strands Decider 2
                         └────────────────────────────────────────┘
 ```
 
-1. **⚡ Fast-Track Auto-Approve:** Non-functional PRs (documentation, typos, comments) bypass the heavy generative LLM entirely, cutting review time to **125ms** and costing **$0.00**.
-2. **🛑 Uncertainty-Aware Human Escalation:** Unlike traditional LLMs that hallucinate confident approvals, if Decider 2B's calibrated confidence drops below threshold ($\tau = 0.80$), ReviewPilot AI **blocks automated actions and escalates directly to engineering leads**.
-3. **🛡️ Tool-Call Intervention Guardrails:** Uses Strands Agents SDK's native `InterventionHandler` to intercept destructive tool calls (like `merge_pr` or `delete_branch`) and verify repository guardrails via Decider 2B.
+1. **Fast-Track Auto-Approve:** Non-functional PRs (documentation, typos, comments) bypass the heavy generative LLM entirely, cutting review time to **125ms** and costing **$0.00**.
+2. **Uncertainty-Aware Human Escalation:** Unlike traditional LLMs that hallucinate confident approvals, if Decider 2B's calibrated confidence drops below threshold ($\tau = 0.80$), ReviewPilot AI **blocks automated actions and escalates directly to engineering leads**.
+3. **Tool-Call Intervention Guardrails:** Uses Strands Agents SDK's native `InterventionHandler` to intercept destructive tool calls (like `merge_pr` or `delete_branch`) and verify repository guardrails via Decider 2B.
 
 ---
 
-## 📊 Benchmark Results: Decider 2B vs Pure Bedrock LLM
+## Benchmark Results: Decider 2B vs Pure Bedrock LLM
 
 Benchmarked across 5 representative pull request workloads ([`benchmark/benchmark_comparison.py`](benchmark/benchmark_comparison.py)):
 
 | Metric | Legacy Bedrock LLM Agent | ReviewPilot AI (Hybrid) | Improvement |
 | :--- | :--- | :--- | :--- |
-| **Average Triage Latency** | 2,200.0 ms | **125.2 ms** | **94.3% FASTER** 🚀 |
-| **Documentation PR Cost** | \$0.0220 | **\$0.0000** | **100% FREE** |
-| **Total Test Suite Cost** | \$0.1230 | **\$0.0360** | **70.7% SAVINGS** 💰 |
+| **Average Triage Latency** | 2,200.0 ms | **125.2 ms** | **94.3% FASTER** |
+| **Documentation PR Cost** | $0.0220 | **$0.0000** | **100% FREE** |
+| **Total Test Suite Cost** | $0.1230 | **$0.0360** | **70.7% SAVINGS** |
 | **Uncertainty Gating** | Silent Hallucination | **Calibrated Escalation** | **Zero Silent Failures** |
 
 ---
 
-## 🧩 The Reusable Decision Pattern (`#policy`)
+## The Reusable Decision Pattern (`#policy`)
 
 The primary hackathon pattern is implemented in [`decision_patterns/policy_gatekeeper.py`](decision_patterns/policy_gatekeeper.py). It provides a self-contained contract for evaluating pull requests:
 
@@ -112,7 +112,7 @@ See [`docs/reusable_pattern_guide.md`](docs/reusable_pattern_guide.md) for full 
 
 ---
 
-## 🛠️ Installation & Quickstart
+## Installation & Quickstart
 
 ### Prerequisites
 - Python 3.11, 3.12, or 3.14
@@ -170,7 +170,7 @@ ReviewPilot AI automatically detects port 8000 when active!
 
 ---
 
-## 📁 Repository Structure
+## Repository Structure
 
 ```
 ReviewPilot AI/
@@ -214,7 +214,7 @@ ReviewPilot AI/
 
 ---
 
-## 🏆 Hackathon Submission Metadata
+## Hackathon Submission Metadata
 - **Project Name:** ReviewPilot AI
 - **Repository:** [https://github.com/Saifan-01/ReviewPilot-AI](https://github.com/Saifan-01/ReviewPilot-AI)
 - **Primary Hackathon Tag:** `#strands-decider-2b`
